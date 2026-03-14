@@ -1,1 +1,30 @@
 
+# =======================================================
+# Compress a Large .pkl Model File for GitHub
+# =======================================================
+import joblib
+import os
+
+# 1️⃣ Original large model file
+original_model_file = "80d669ef-cc7d-43f9-a5cd-360cca19529c.pkl"
+
+# 2️⃣ Load the model
+print("Loading original model...")
+model = joblib.load(original_model_file)
+
+# 3️⃣ Compress and save
+compressed_model_file = "rf_model_compressed.pkl"
+# compress=3 is a good balance between size & speed
+joblib.dump(model, compressed_model_file, compress=3)
+
+# 4️⃣ Check new file size
+size_mb = os.path.getsize(compressed_model_file) / (1024*1024)
+print(f"Compressed model saved as {compressed_model_file}")
+print(f"Compressed size: {size_mb:.2f} MB")
+
+# ✅ Optional: If still >25MB, increase compression
+if size_mb > 25:
+    print("File still >25MB, applying maximum compression...")
+    joblib.dump(model, "rf_model_compressed_max.pkl", compress=9)
+    size_max = os.path.getsize("rf_model_compressed_max.pkl") / (1024*1024)
+    print(f"Max compressed size: {size_max:.2f} MB")
